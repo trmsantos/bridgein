@@ -35,6 +35,64 @@ bridgein/
 
 ---
 
+## Architecture Diagram
+
+```
++-------------------------+          +---------------------------+
+|   Browser / Employee    |          |   Browser / Manager       |
+|                         |          |                           |
+|  /report/{magic_link}   |          |  /login  /dashboard       |
++----------+--------------+          +-------------+-------------+
+           |                                       |
+           |           HTTP / Axios                |
+           +-------------------+-------------------+
+                               |
+                    +----------+----------+
+                    |                     |
+                    |   React (Vite)      |
+                    |   localhost:5173    |
+                    |                     |
+                    |   Pages:            |
+                    |   - LoginPage       |
+                    |   - RegisterPage    |
+                    |   - DashboardPage   |
+                    |   - ReportDetail    |
+                    |   - PublicReport    |
+                    +----------+----------+
+                               |
+                     Proxy /api -> :8000
+                               |
+                    +----------+----------+
+                    |                     |
+                    |   Django + DRF      |
+                    |   localhost:8000    |
+                    |                     |
+                    |   Apps:             |
+                    |   - users           |
+                    |   - companies       |
+                    |   - reports         |
+                    |                     |
+                    |   JWT Auth          |
+                    |   Tenant Isolation  |
+                    |   Signals + Email   |
+                    +----------+----------+
+                               |
+                    +----------+----------+
+                    |                     |
+                    |   PostgreSQL        |
+                    |   localhost:5432    |
+                    |                     |
+                    |   Tables:           |
+                    |   - users           |
+                    |   - companies       |
+                    |   - reports         |
+                    +---------------------+
+
+All three services run inside Docker containers via docker-compose.
+```
+
+---
+
 ## Local Setup
 
 ### Step 1 - Clone the repository
@@ -158,6 +216,22 @@ If for any reason migrations did not run automatically:
 
 ```
 docker compose exec backend python manage.py migrate
+```
+
+---
+
+## Running Tests
+
+```
+docker compose exec backend python manage.py test
+```
+
+Expected output:
+```
+Found 13 tests.
+..............
+Ran 13 tests in 0.XXXs
+OK
 ```
 
 ---
