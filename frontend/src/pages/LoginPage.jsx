@@ -26,49 +26,84 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-3xl font-bold text-blue-700 text-center mb-1">BridgeIn</h1>
-        <h2 className="text-base text-gray-500 text-center font-normal mb-6">Sign in to your account</h2>
-        {error && (
-          <div className="bg-red-100 text-red-600 px-4 py-3 rounded mb-4 text-sm">{error}</div>
-        )}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Username</label>
-            <input
-              className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="username"
-              type="text"
-              value={form.username}
-              onChange={handleChange}
-              required
-              autoFocus
-            />
+    <div className="min-h-screen flex">
+      {/* Left panel */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-blue-700 to-blue-500 flex-col items-center justify-center p-12 text-white">
+        <div className="mb-8">
+          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+            <span className="text-3xl"></span>
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Password</label>
-            <input
-              className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
+          <h1 className="text-4xl font-bold mb-4">BridgeIn</h1>
+          <p className="text-blue-100 text-lg leading-relaxed max-w-sm">
+            A secure whistleblowing platform that protects employees and empowers companies to act with integrity.
+          </p>
+        </div>
+        <div className="flex flex-col gap-4 w-full max-w-sm">
+          {['100% Anonymous reporting', 'End-to-end secure', 'EU compliance ready'].map((item) => (
+            <div key={item} className="flex items-center gap-3 bg-white/10 rounded-lg px-4 py-3">
+              <span className="text-green-300 text-lg">✓</span>
+              <span className="text-sm">{item}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Right panel */}
+      <div className="flex-1 flex items-center justify-center bg-gray-50 p-6">
+        <div className="w-full max-w-md">
+          <div className="lg:hidden text-center mb-8">
+            <h1 className="text-3xl font-bold text-blue-700">BridgeIn</h1>
+            <p className="text-gray-500 text-sm mt-1">Secure whistleblowing platform</p>
           </div>
-          <button
-            className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 rounded transition disabled:opacity-60"
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? 'Signing in...' : 'Sign in'}
-          </button>
-        </form>
-        <p className="text-sm text-gray-500 text-center mt-4">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-700 hover:underline">Register here</Link>
-        </p>
+
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Welcome back</h2>
+              <p className="text-gray-500 text-sm mt-1">Sign in to your manager account</p>
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-5 text-sm flex items-center gap-2">
+                <span></span> {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-gray-700">Username</label>
+                <input
+                  className="border border-gray-200 bg-gray-50 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  name="username" type="text" value={form.username}
+                  onChange={handleChange} required autoFocus placeholder="your_username"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-gray-700">Password</label>
+                <input
+                  className="border border-gray-200 bg-gray-50 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  name="password" type="password" value={form.password}
+                  onChange={handleChange} required placeholder="••••••••"
+                />
+              </div>
+              <button
+                className="bg-blue-700 hover:bg-blue-800 active:scale-95 text-white font-semibold py-2.5 rounded-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+                type="submit" disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Signing in...
+                  </span>
+                ) : 'Sign in'}
+              </button>
+            </form>
+
+            <p className="text-sm text-gray-500 text-center mt-6">
+              Don't have an account?{' '}
+              <Link to="/register" className="text-blue-700 font-semibold hover:underline">Register here</Link>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )
