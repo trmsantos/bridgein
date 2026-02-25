@@ -20,9 +20,7 @@ export default function PublicReportPage() {
     setLoading(true)
     try {
       const payload = { ...form }
-      if (form.anonymous) {
-        payload.contact_info = ''
-      }
+      if (form.anonymous) payload.contact_info = ''
       await api.post(`/reports/public/${magic_link}/`, payload)
       setSubmitted(true)
     } catch (err) {
@@ -42,11 +40,11 @@ export default function PublicReportPage() {
 
   if (submitted) {
     return (
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <div style={styles.successIcon}>✓</div>
-          <h2 style={styles.successTitle}>Report Submitted</h2>
-          <p style={styles.successText}>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md text-center">
+          <div className="text-green-500 text-5xl mb-4">✓</div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">Report Submitted</h2>
+          <p className="text-gray-500 text-sm">
             Thank you for your report. It has been submitted confidentially and will be reviewed by the appropriate team.
           </p>
         </div>
@@ -55,87 +53,56 @@ export default function PublicReportPage() {
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>Submit a Report</h1>
-        <p style={styles.intro}>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-lg">
+        <h1 className="text-2xl font-bold text-blue-700 mb-2">Submit a Report</h1>
+        <p className="text-sm text-gray-500 mb-6">
           Your report will be handled confidentially. If you check "Anonymous", your contact information will not be stored.
         </p>
-        {error && <div style={styles.error}>{error}</div>}
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.field}>
-            <label style={styles.label}>Title <span style={styles.required}>*</span></label>
+        {error && <div className="bg-red-100 text-red-600 px-4 py-3 rounded mb-4 text-sm">{error}</div>}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">Title <span className="text-red-500">*</span></label>
             <input
-              style={styles.input}
-              name="title"
-              type="text"
-              value={form.title}
-              onChange={handleChange}
-              required
-              placeholder="Brief summary of the issue"
+              className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="title" type="text" value={form.title} onChange={handleChange}
+              required placeholder="Brief summary of the issue"
             />
           </div>
-          <div style={styles.field}>
-            <label style={styles.label}>Description <span style={styles.required}>*</span></label>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">Description <span className="text-red-500">*</span></label>
             <textarea
-              style={{ ...styles.input, minHeight: '120px', resize: 'vertical' }}
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              required
-              placeholder="Describe the issue in detail..."
+              className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[120px] resize-y"
+              name="description" value={form.description} onChange={handleChange}
+              required placeholder="Describe the issue in detail..."
             />
           </div>
-          <div style={styles.checkboxField}>
-            <label style={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                name="anonymous"
-                checked={form.anonymous}
-                onChange={handleChange}
-                style={styles.checkbox}
-              />
-              Submit anonymously
-            </label>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox" name="anonymous" id="anonymous"
+              checked={form.anonymous} onChange={handleChange}
+              className="w-4 h-4 text-blue-600"
+            />
+            <label htmlFor="anonymous" className="text-sm text-gray-700 cursor-pointer">Submit anonymously</label>
           </div>
           {!form.anonymous && (
-            <div style={styles.field}>
-              <label style={styles.label}>Contact Information (optional)</label>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-gray-700">Contact Information</label>
               <input
-                style={styles.input}
-                name="contact_info"
-                type="text"
-                value={form.contact_info}
-                onChange={handleChange}
-                placeholder="Your email or phone number"
+                className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="contact_info" type="text" value={form.contact_info}
+                onChange={handleChange} placeholder="Email or phone (optional)"
               />
             </div>
           )}
-          <button style={styles.button} type="submit" disabled={loading}>
+          <button
+            className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 rounded transition disabled:opacity-60"
+            type="submit" disabled={loading}
+          >
             {loading ? 'Submitting...' : 'Submit Report'}
           </button>
         </form>
       </div>
     </div>
   )
-}
-
-const styles = {
-  container: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f3f4f6', padding: '1rem' },
-  card: { background: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', width: '100%', maxWidth: '560px' },
-  title: { margin: '0 0 0.5rem', fontSize: '1.5rem', color: '#111827' },
-  intro: { margin: '0 0 1.5rem', fontSize: '0.875rem', color: '#6b7280', lineHeight: '1.5' },
-  error: { background: '#fee2e2', color: '#dc2626', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem', fontSize: '0.875rem' },
-  form: { display: 'flex', flexDirection: 'column', gap: '1rem' },
-  field: { display: 'flex', flexDirection: 'column', gap: '0.25rem' },
-  label: { fontSize: '0.875rem', fontWeight: '500', color: '#374151' },
-  required: { color: '#dc2626' },
-  input: { padding: '0.5rem 0.75rem', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '1rem', outline: 'none', fontFamily: 'inherit' },
-  checkboxField: { display: 'flex', alignItems: 'center' },
-  checkboxLabel: { display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: '#374151', cursor: 'pointer' },
-  checkbox: { width: '16px', height: '16px', cursor: 'pointer' },
-  button: { padding: '0.625rem', background: '#1d4ed8', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '1rem', cursor: 'pointer', marginTop: '0.5rem' },
-  successIcon: { width: '64px', height: '64px', background: '#dcfce7', color: '#16a34a', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', margin: '0 auto 1.5rem', fontWeight: 'bold' },
-  successTitle: { textAlign: 'center', margin: '0 0 1rem', fontSize: '1.25rem', color: '#111827' },
-  successText: { textAlign: 'center', color: '#6b7280', lineHeight: '1.6', margin: 0 },
 }

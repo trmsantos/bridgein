@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import api from '../api'
 
-const STATUS_COLORS = {
-  new: { background: '#dbeafe', color: '#1d4ed8' },
-  in_review: { background: '#fef3c7', color: '#d97706' },
-  resolved: { background: '#dcfce7', color: '#16a34a' },
+const STATUS_CLASSES = {
+  new: 'bg-blue-100 text-blue-700',
+  in_review: 'bg-yellow-100 text-yellow-700',
+  resolved: 'bg-green-100 text-green-700',
 }
 
 export default function ReportDetailPage() {
@@ -20,19 +20,14 @@ export default function ReportDetailPage() {
 
   useEffect(() => {
     api.get(`/reports/${id}/`)
-      .then((res) => {
-        setReport(res.data)
-        setStatus(res.data.status)
-      })
+      .then((res) => { setReport(res.data); setStatus(res.data.status) })
       .catch(() => setError('Failed to load report.'))
       .finally(() => setLoading(false))
   }, [id])
 
   const handleStatusUpdate = async (e) => {
     e.preventDefault()
-    setSaving(true)
-    setError('')
-    setSuccess('')
+    setSaving(true); setError(''); setSuccess('')
     try {
       const res = await api.patch(`/reports/${id}/`, { status })
       setReport((prev) => ({ ...prev, status: res.data.status }))
@@ -44,60 +39,62 @@ export default function ReportDetailPage() {
     }
   }
 
-  if (loading) return <div style={{ padding: '2rem' }}>Loading...</div>
-  if (!report) return <div style={{ padding: '2rem' }}>Report not found.</div>
+  if (loading) return <div className="p-8 text-gray-500">Loading...</div>
+  if (!report) return <div className="p-8 text-gray-500">Report not found.</div>
 
   return (
-    <div style={styles.page}>
-      <header style={styles.header}>
-        <h1 style={styles.logo}>BridgeIn</h1>
-        <Link to="/dashboard" style={styles.backLink}>← Back to Dashboard</Link>
+    <div className="min-h-screen bg-gray-100">
+      <header className="bg-white shadow px-6 py-4 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-blue-700">BridgeIn</h1>
+        <Link to="/dashboard" className="text-sm text-blue-600 hover:underline">← Back to Dashboard</Link>
       </header>
 
-      <main style={styles.main}>
-        {error && <div style={styles.error}>{error}</div>}
-        {success && <div style={styles.success}>{success}</div>}
+      <main className="max-w-3xl mx-auto px-4 py-8">
+        {error && <div className="bg-red-100 text-red-600 px-4 py-3 rounded mb-4 text-sm">{error}</div>}
+        {success && <div className="bg-green-100 text-green-700 px-4 py-3 rounded mb-4 text-sm">{success}</div>}
 
-        <div style={styles.card}>
-          <div style={styles.cardHeader}>
-            <h2 style={styles.reportTitle}>{report.title}</h2>
-            <span style={{ ...styles.badge, ...STATUS_COLORS[report.status] }}>
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-start justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">{report.title}</h2>
+            <span className={`text-xs font-semibold px-2 py-1 rounded-full ${STATUS_CLASSES[report.status] || 'bg-gray-100 text-gray-600'}`}>
               {report.status.replace('_', ' ')}
             </span>
           </div>
 
-          <div style={styles.meta}>
+          <div className="flex flex-wrap gap-4 text-xs text-gray-400 mb-6">
             <span>{report.anonymous ? '🔒 Anonymous' : '👤 Identified'}</span>
             <span>Submitted: {new Date(report.created_at).toLocaleString()}</span>
             <span>Updated: {new Date(report.updated_at).toLocaleString()}</span>
           </div>
 
-          <div style={styles.section}>
-            <h3 style={styles.sectionLabel}>Description</h3>
-            <p style={styles.description}>{report.description}</p>
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">Description</h3>
+            <p className="text-gray-700 text-sm whitespace-pre-wrap">{report.description}</p>
           </div>
 
           {!report.anonymous && report.contact_info && (
-            <div style={styles.section}>
-              <h3 style={styles.sectionLabel}>Contact Information</h3>
-              <p style={styles.description}>{report.contact_info}</p>
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">Contact Information</h3>
+              <p className="text-gray-700 text-sm">{report.contact_info}</p>
             </div>
           )}
 
-          <div style={styles.section}>
-            <h3 style={styles.sectionLabel}>Update Status</h3>
-            <form onSubmit={handleStatusUpdate} style={styles.statusForm}>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">Update Status</h3>
+            <form onSubmit={handleStatusUpdate} className="flex items-center gap-3">
               <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                style={styles.select}
+                className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={status} onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="new">New</option>
                 <option value="in_review">In Review</option>
                 <option value="resolved">Resolved</option>
               </select>
-              <button style={styles.button} type="submit" disabled={saving}>
-                {saving ? 'Saving...' : 'Update Status'}
+              <button
+                className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-4 py-2 rounded text-sm transition disabled:opacity-60"
+                type="submit" disabled={saving}
+              >
+                {saving ? 'Saving...' : 'Update'}
               </button>
             </form>
           </div>
@@ -105,25 +102,4 @@ export default function ReportDetailPage() {
       </main>
     </div>
   )
-}
-
-const styles = {
-  page: { minHeight: '100vh', background: '#f3f4f6', fontFamily: 'system-ui, sans-serif' },
-  header: { background: '#fff', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
-  logo: { margin: 0, fontSize: '1.5rem', color: '#1d4ed8' },
-  backLink: { color: '#1d4ed8', textDecoration: 'none', fontSize: '0.875rem' },
-  main: { maxWidth: '800px', margin: '0 auto', padding: '2rem 1rem' },
-  error: { background: '#fee2e2', color: '#dc2626', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem' },
-  success: { background: '#dcfce7', color: '#16a34a', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem' },
-  card: { background: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
-  cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '1rem' },
-  reportTitle: { margin: 0, fontSize: '1.25rem', color: '#111827' },
-  badge: { padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: '600', textTransform: 'capitalize', whiteSpace: 'nowrap' },
-  meta: { display: 'flex', gap: '1.5rem', fontSize: '0.75rem', color: '#9ca3af', marginBottom: '1.5rem', flexWrap: 'wrap' },
-  section: { borderTop: '1px solid #e5e7eb', paddingTop: '1.25rem', marginTop: '1.25rem' },
-  sectionLabel: { margin: '0 0 0.5rem', fontSize: '0.875rem', fontWeight: '600', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em' },
-  description: { margin: 0, color: '#374151', lineHeight: '1.6', whiteSpace: 'pre-wrap' },
-  statusForm: { display: 'flex', gap: '0.75rem', alignItems: 'center' },
-  select: { padding: '0.5rem 0.75rem', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '0.875rem', outline: 'none', cursor: 'pointer' },
-  button: { padding: '0.5rem 1rem', background: '#1d4ed8', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '0.875rem', cursor: 'pointer' },
 }

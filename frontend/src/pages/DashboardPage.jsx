@@ -3,10 +3,10 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import api from '../api'
 
-const STATUS_COLORS = {
-  new: { background: '#dbeafe', color: '#1d4ed8' },
-  in_review: { background: '#fef3c7', color: '#d97706' },
-  resolved: { background: '#dcfce7', color: '#16a34a' },
+const STATUS_CLASSES = {
+  new: 'bg-blue-100 text-blue-700',
+  in_review: 'bg-yellow-100 text-yellow-700',
+  resolved: 'bg-green-100 text-green-700',
 }
 
 export default function DashboardPage() {
@@ -40,48 +40,64 @@ export default function DashboardPage() {
     : ''
 
   return (
-    <div style={styles.page}>
-      <header style={styles.header}>
-        <h1 style={styles.logo}>BridgeIn</h1>
-        <div style={styles.headerRight}>
-          <span style={styles.userInfo}>👤 {user?.username}</span>
-          <button style={styles.logoutBtn} onClick={handleLogout}>Logout</button>
+    <div className="min-h-screen bg-gray-100">
+      <header className="bg-white shadow px-6 py-4 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-blue-700">BridgeIn</h1>
+        <div className="flex items-center gap-4">
+          <span className="text-gray-600 text-sm">👤 {user?.username}</span>
+          <button
+            onClick={handleLogout}
+            className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded transition"
+          >
+            Logout
+          </button>
         </div>
       </header>
 
-      <main style={styles.main}>
+      <main className="max-w-4xl mx-auto px-4 py-8">
         {company && (
-          <div style={styles.companyCard}>
-            <h2 style={styles.companyName}>{company.name}</h2>
-            <p style={styles.magicLinkLabel}>Employee Reporting Link:</p>
-            <div style={styles.magicLinkBox}>
-              <a href={reportingUrl} target="_blank" rel="noopener noreferrer" style={styles.magicLink}>
+          <div className="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-1">{company.name}</h2>
+            <p className="text-sm text-gray-500 mb-2">Employee Reporting Link:</p>
+            <div className="bg-gray-50 border border-gray-200 rounded px-3 py-2">
+              <a
+                href={reportingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 text-sm hover:underline break-all"
+              >
                 {reportingUrl}
               </a>
             </div>
           </div>
         )}
 
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>Reports ({reports.length})</h2>
-          {loading && <p>Loading reports...</p>}
-          {error && <div style={styles.error}>{error}</div>}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Reports ({reports.length})</h2>
+          {loading && <p className="text-gray-500">Loading reports...</p>}
+          {error && <div className="bg-red-100 text-red-600 px-4 py-3 rounded text-sm mb-4">{error}</div>}
           {!loading && reports.length === 0 && (
-            <div style={styles.empty}>
+            <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
               <p>No reports yet. Share your reporting link with employees to get started.</p>
             </div>
           )}
-          <div style={styles.reportsList}>
+          <div className="flex flex-col gap-3">
             {reports.map((report) => (
-              <Link key={report.id} to={`/dashboard/reports/${report.id}`} style={styles.reportCard}>
-                <div style={styles.reportHeader}>
-                  <span style={styles.reportTitle}>{report.title}</span>
-                  <span style={{ ...styles.badge, ...STATUS_COLORS[report.status] }}>
+              <Link
+                key={report.id}
+                to={`/dashboard/reports/${report.id}`}
+                className="bg-white rounded-lg shadow p-4 hover:shadow-md transition block"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-medium text-gray-800">{report.title}</span>
+                  <span className={`text-xs font-semibold px-2 py-1 rounded-full ${STATUS_CLASSES[report.status] || 'bg-gray-100 text-gray-600'}`}>
                     {report.status.replace('_', ' ')}
                   </span>
                 </div>
-                <p style={styles.reportDesc}>{report.description.substring(0, 120)}{report.description.length > 120 ? '...' : ''}</p>
-                <div style={styles.reportMeta}>
+                <p className="text-sm text-gray-500 mb-2">
+                  {report.description.substring(0, 120)}{report.description.length > 120 ? '...' : ''}
+                </p>
+                <div className="flex items-center gap-4 text-xs text-gray-400">
                   <span>{report.anonymous ? '🔒 Anonymous' : '👤 Identified'}</span>
                   <span>{new Date(report.created_at).toLocaleDateString()}</span>
                 </div>
@@ -92,30 +108,4 @@ export default function DashboardPage() {
       </main>
     </div>
   )
-}
-
-const styles = {
-  page: { minHeight: '100vh', background: '#f3f4f6', fontFamily: 'system-ui, sans-serif' },
-  header: { background: '#fff', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
-  logo: { margin: 0, fontSize: '1.5rem', color: '#1d4ed8' },
-  headerRight: { display: 'flex', alignItems: 'center', gap: '1rem' },
-  userInfo: { fontSize: '0.875rem', color: '#6b7280' },
-  logoutBtn: { padding: '0.375rem 0.75rem', background: 'transparent', border: '1px solid #d1d5db', borderRadius: '4px', cursor: 'pointer', fontSize: '0.875rem' },
-  main: { maxWidth: '900px', margin: '0 auto', padding: '2rem 1rem' },
-  companyCard: { background: '#fff', padding: '1.5rem', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', marginBottom: '2rem' },
-  companyName: { margin: '0 0 1rem', fontSize: '1.25rem', color: '#111827' },
-  magicLinkLabel: { margin: '0 0 0.5rem', fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' },
-  magicLinkBox: { background: '#f3f4f6', padding: '0.75rem', borderRadius: '4px', wordBreak: 'break-all' },
-  magicLink: { color: '#1d4ed8', fontSize: '0.875rem', textDecoration: 'none' },
-  section: { background: '#fff', padding: '1.5rem', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
-  sectionTitle: { margin: '0 0 1rem', fontSize: '1.125rem', color: '#111827' },
-  error: { background: '#fee2e2', color: '#dc2626', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem' },
-  empty: { textAlign: 'center', padding: '2rem', color: '#6b7280' },
-  reportsList: { display: 'flex', flexDirection: 'column', gap: '0.75rem' },
-  reportCard: { display: 'block', padding: '1rem', border: '1px solid #e5e7eb', borderRadius: '6px', textDecoration: 'none', color: 'inherit', transition: 'border-color 0.2s' },
-  reportHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' },
-  reportTitle: { fontWeight: '600', fontSize: '0.95rem', color: '#111827' },
-  badge: { padding: '0.25rem 0.625rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: '500', textTransform: 'capitalize' },
-  reportDesc: { margin: '0 0 0.5rem', fontSize: '0.875rem', color: '#6b7280', lineHeight: '1.5' },
-  reportMeta: { display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#9ca3af' },
 }

@@ -32,52 +32,54 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>BridgeIn</h1>
-        <h2 style={styles.subtitle}>Create your account</h2>
-        {error && <div style={styles.error}>{error}</div>}
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.field}>
-            <label style={styles.label}>Company Name</label>
-            <input style={styles.input} name="company_name" type="text" value={form.company_name} onChange={handleChange} required />
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 className="text-3xl font-bold text-blue-700 text-center mb-1">BridgeIn</h1>
+        <h2 className="text-base text-gray-500 text-center font-normal mb-6">Create your account</h2>
+        {error && (
+          <div className="bg-red-100 text-red-600 px-4 py-3 rounded mb-4 text-sm">{error}</div>
+        )}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">Company Name</label>
+            <input
+              className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="company_name" type="text" value={form.company_name} onChange={handleChange} required
+            />
           </div>
-          <div style={styles.field}>
-            <label style={styles.label}>Username</label>
-            <input style={styles.input} name="username" type="text" value={form.username} onChange={handleChange} required autoFocus />
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">Username</label>
+            <input
+              className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="username" type="text" value={form.username} onChange={handleChange} required autoFocus
+            />
           </div>
-          <div style={styles.field}>
-            <label style={styles.label}>Email</label>
-            <input style={styles.input} name="email" type="email" value={form.email} onChange={handleChange} required />
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">Email</label>
+            <input
+              className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="email" type="email" value={form.email} onChange={handleChange} required
+            />
           </div>
-          <div style={styles.field}>
-            <label style={styles.label}>Password</label>
-            <input style={styles.input} name="password" type="password" value={form.password} onChange={handleChange} required />
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">Password</label>
+            <input
+              className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="password" type="password" value={form.password} onChange={handleChange} required
+            />
           </div>
-          <button style={styles.button} type="submit" disabled={loading}>
+          <button
+            className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 rounded transition disabled:opacity-60"
+            type="submit" disabled={loading}
+          >
             {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
-        <p style={styles.footer}>
+        <p className="text-sm text-gray-500 text-center mt-4">
           Already have an account?{' '}
-          <Link to="/login" style={styles.link}>Sign in</Link>
+          <Link to="/login" className="text-blue-700 hover:underline">Sign in</Link>
         </p>
       </div>
     </div>
   )
-}
-
-const styles = {
-  container: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f3f4f6' },
-  card: { background: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' },
-  title: { margin: '0 0 0.25rem', fontSize: '1.75rem', color: '#1d4ed8', textAlign: 'center' },
-  subtitle: { margin: '0 0 1.5rem', fontSize: '1rem', color: '#6b7280', textAlign: 'center', fontWeight: 'normal' },
-  error: { background: '#fee2e2', color: '#dc2626', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem', fontSize: '0.875rem' },
-  form: { display: 'flex', flexDirection: 'column', gap: '1rem' },
-  field: { display: 'flex', flexDirection: 'column', gap: '0.25rem' },
-  label: { fontSize: '0.875rem', fontWeight: '500', color: '#374151' },
-  input: { padding: '0.5rem 0.75rem', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '1rem', outline: 'none' },
-  button: { padding: '0.625rem', background: '#1d4ed8', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '1rem', cursor: 'pointer', marginTop: '0.5rem' },
-  footer: { textAlign: 'center', marginTop: '1rem', fontSize: '0.875rem', color: '#6b7280' },
-  link: { color: '#1d4ed8', textDecoration: 'none' },
 }
