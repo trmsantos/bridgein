@@ -1,4 +1,4 @@
-# BridgeIn - Whistleblowing Platform
+# Bridge In - Whistleblowing Platform
 
 A multi-tenant whistleblowing platform for EU companies built with **Django + DRF** (backend) and **React + Vite** (frontend).
 Each company gets a unique anonymous reporting link for their employees.
