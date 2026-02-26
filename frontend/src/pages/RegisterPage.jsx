@@ -39,7 +39,7 @@ export default function RegisterPage() {
           <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
             <span className="text-3xl"></span>
           </div>
-          <h1 className="text-4xl font-bold mb-4">BridgeIn</h1>
+          <h1 className="text-4xl font-bold mb-4">Report APP</h1>
           <p className="text-blue-100 text-lg leading-relaxed max-w-sm">
             Set up your company's confidential reporting channel in minutes.
           </p>
@@ -58,7 +58,7 @@ export default function RegisterPage() {
       <div className="flex-1 flex items-center justify-center bg-gray-50 p-6">
         <div className="w-full max-w-md">
           <div className="lg:hidden text-center mb-8">
-            <h1 className="text-3xl font-bold text-blue-700">BridgeIn</h1>
+            <h1 className="text-3xl font-bold text-blue-700">Report APP</h1>
             <p className="text-gray-500 text-sm mt-1">Secure whistleblowing platform</p>
           </div>
 

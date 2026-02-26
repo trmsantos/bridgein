@@ -57,7 +57,7 @@ export default function DashboardPage() {
       <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-2">
           <span className="text-xl">🛡️</span>
-          <h1 className="text-xl font-bold text-blue-700">BridgeIn</h1>
+          <h1 className="text-xl font-bold text-blue-700">Report APP</h1>
         </div>
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1.5">
