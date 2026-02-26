@@ -143,7 +143,7 @@ export default function PublicReportPage() {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-4">
-          Powered by <span className="font-semibold text-blue-600">Report APP</span> · EU Whistleblowing Directive compliant
+          Powered by <span className="font-semibold text-blue-600">Report APP</span> · Test APP
         </p>
       </div>
     </div>
