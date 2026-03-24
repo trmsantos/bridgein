@@ -1,0 +1,36 @@
+# ── Stage 1: Build do React ──────────────────────────────────────────────────
+FROM node:20-alpine AS frontend-build
+
+WORKDIR /frontend
+
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+
+COPY frontend/ .
+RUN npm run build
+# O resultado fica em /frontend/dist
+
+
+# ── Stage 2: Backend Django ───────────────────────────────────────────────────
+FROM python:3.11-slim AS backend
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ .
+
+# Copia o build do React para dentro do container do Django
+COPY --from=frontend-build /frontend/dist ./frontend_dist
+
+RUN chmod +x entrypoint.prod.sh
+
+EXPOSE 8000
+
+ENTRYPOINT ["sh", "entrypoint.prod.sh"]
